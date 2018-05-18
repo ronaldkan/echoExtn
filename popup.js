@@ -20,3 +20,4 @@ document.addEventListener('DOMContentLoaded', function() {
   }, false);
 
 console.log('page on load test');
+var socket = io('http://localhost:3001');
