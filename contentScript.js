@@ -60,9 +60,16 @@ function storeColor(hexCode) {
 }
 
 hwReplacements = new Promise(function (resolve, reject) {
-    chrome.storage.local.get("words", function (items) {
-        resolve(items);
+
+    chrome.runtime.sendMessage({url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
+        chrome.storage.local.set({"words" : response.data}, function(result) {
+
+        });
+        chrome.storage.local.get("words", function (items) {
+            resolve(items);
+        });
     });
+
 });
 
 highlightColor = new Promise(function (resolve, reject) {
