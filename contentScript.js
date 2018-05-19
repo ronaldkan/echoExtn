@@ -179,28 +179,63 @@ var bubbleDOM = document.createElement('div');
 bubbleDOM.setAttribute('class', 'selection_bubble');
 document.body.appendChild(bubbleDOM);
 
-// Lets listen to mouseup DOM events.
-document.addEventListener('mouseup', function (e) {
-  var selection = window.getSelection().toString();
-  if (selection.length > 0) {
-    renderBubble(e.clientX, e.clientY, selection);
-  }
-}, false);
-
-
-// Close the bubble when we click on the screen.
-document.addEventListener('mousedown', function (e) {
-  bubbleDOM.style.visibility = 'hidden';
-}, false);
-
-// Move that bubble to the appropriate location.
-function renderBubble(mouseX, mouseY, selection) {
-  bubbleDOM.innerHTML = selection;
-  bubbleDOM.style.top = mouseY + 'px';
-  bubbleDOM.style.left = mouseX + 'px';
-  bubbleDOM.style.visibility = 'visible';
+function replaceSelectionWithHtml(html) {
+    var range;
+    if (window.getSelection && window.getSelection().getRangeAt) {
+        range = window.getSelection().getRangeAt(0);
+        range.deleteContents();
+        var div = document.createElement("div");
+        div.innerHTML = html;
+        var frag = document.createDocumentFragment(), child;
+        while ( (child = div.firstChild) ) {
+            frag.appendChild(child);
+        }
+        range.insertNode(frag);
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.pasteHTML(html);
+    }
 }
 
+// Lets listen to mouseup DOM events.
+document.addEventListener('mouseup', function (e) {
+    var range;
+    if (window.getSelection().toString().length === 0) {
+        $("span.popup-tag").css("display","none");
+        return;
+    }
+    if (window.getSelection && window.getSelection().getRangeAt) {
+        var replaceText = window.getSelection().toString();
+        $("span.popup-tag").css("display","block");
+        $("span.popup-tag").css("top",event.clientY + 10);
+        $("span.popup-tag").css("left",event.clientX);
+        $("span.popup-tag").html('<button>highlight</button>');
+        
+        range = window.getSelection().getRangeAt(0);
+        console.log(window.getSelection().toString());
+        range.deleteContents();
+        var div = document.createElement("div");
+        div.innerHTML = '<span style="background-color:yellow;">' + replaceText + '</span>';
+        var frag = document.createDocumentFragment(), child;
+        while ( (child = div.firstChild) ) {
+            frag.appendChild(child);
+        }
+        range.insertNode(frag);
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.pasteHTML('<span style="font-weight:bold;">' + replaceText +'</span>');
+    }
+}, false);
+
+
+
+document.body.innerHTML += '<span class="popup-tag"></span>';
+
+
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.method == "getSelection")
+        console.log(window.getSelection().toString());
+  });
 document.body.addEventListener('contextmenu', function(e) {
     LAST_SELECTION = window.getSelection().getRangeAt(0);
     LAST_ELEMENT = e.target;
