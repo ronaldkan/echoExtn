@@ -158,6 +158,7 @@ $(document).on('click', '.highlightBtn', function(e) {
     span.appendChild(selectedText);
     window.getSelection().getRangeAt(0).insertNode(span);
     console.log('replacing text -', replaceText);
+    window.getSelection().empty();
     chrome.runtime.sendMessage({"loadHighlights": false, "hightlightedText": replaceText, "range": selectionRangeClone}, function(response) {
         // console.log(response);
       });
