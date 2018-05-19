@@ -1,3 +1,19 @@
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+
+      var contentObj = new Object();
+      contentObj.author = "username";
+      contentObj.address = sender.tab.url;
+      contentObj.detail = request.hightlightedText;
+
+      $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
+            console.log(data);
+        });
+
+    //   if (request.greeting == "hello")
+        // sendResponse({farewell: "goodbye"});
+    });
+
 function addHighlightableExpression(info, tab) {
     console.log("info", info);
     var contentObj = new Object();
@@ -7,7 +23,6 @@ function addHighlightableExpression(info, tab) {
 
         console.log("contentObj", contentObj);
         $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
-            alert('posted');
             console.log(data);
         });
 

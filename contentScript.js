@@ -175,9 +175,11 @@ $(function() {
 });
 
 // Add bubble to the top of the page.
-var bubbleDOM = document.createElement('div');
-bubbleDOM.setAttribute('class', 'selection_bubble');
-document.body.appendChild(bubbleDOM);
+// var bubbleDOM = document.createElement('div');
+// bubbleDOM.setAttribute('class', 'selection_bubble');
+// document.body.appendChild(bubbleDOM);
+
+
 
 function replaceSelectionWithHtml(html) {
     var range;
@@ -200,26 +202,28 @@ function replaceSelectionWithHtml(html) {
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
     var range;
+
     if (window.getSelection().toString().length === 0) {
         $("span.popup-tag").css("display","none");
         return;
     }
     if (window.getSelection && window.getSelection().getRangeAt) {
         var replaceText = window.getSelection().toString();
+        var selectionRangeClone = window.getSelection().getRangeAt(0).cloneRange();
+        
         $("span.popup-tag").css("display","block");
-        $("span.popup-tag").css("top",e.layerY + 10);
-        $("span.popup-tag").css("left",e.clientX);
-        $("span.popup-tag").html('<button>highlight</button>');
+        $("span.popup-tag").css("top",e.clientY + 12 + window.scrollY );
+        $("span.popup-tag").css("left",e.clientX + 20);
         
         range = window.getSelection().getRangeAt(0);
         console.log(window.getSelection().toString());
-        range.deleteContents();
-        var div = document.createElement("div");
-        div.innerHTML = '<span>' + replaceText + '</span>';
+        // range.deleteContents();
+        // var div = document.createElement("div");
+        // div.innerHTML = '<span>' + replaceText + '</span>';
         var frag = document.createDocumentFragment(), child;
-        while ( (child = div.firstChild) ) {
-            frag.appendChild(child);
-        }
+        // while ( (child = div.firstChild) ) {
+        //     frag.appendChild(child);
+        // }
         range.insertNode(frag);
     } else if (document.selection && document.selection.createRange) {
         range = document.selection.createRange();
@@ -227,10 +231,15 @@ document.addEventListener('mouseup', function (e) {
     }
 }, false);
 
+$(document).on('click', '.highlightBtn', function(e) {
+    $("span.popup-tag").css("display","none");
+    var replaceText = window.getSelection().toString();
+    chrome.runtime.sendMessage({"hightlightedText": replaceText}, function(response) {
+        // console.log(response);
+      });
+});
 
-
-document.body.innerHTML += '<span class="popup-tag"></span>';
-
+document.body.innerHTML += '<span class="popup-tag"><button class="highlightBtn">highlight</button></span>';
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.method == "getSelection")
