@@ -26,9 +26,9 @@ chrome.runtime.onMessage.addListener(
         contentObj.detail = request.hightlightedText;
         console.log('hit create highlight');
         console.log('show object', contentObj)
-        $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
-              console.log(data);
-          });  
+        $.post("https://echoes.japanwest.cloudapp.azure.com/content", contentObj, function(data, status) { 
+            console.log(data);
+        });  
     }
     //   if (request.greeting == "hello")
         // sendResponse({farewell: "goodbye"});

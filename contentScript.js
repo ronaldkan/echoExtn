@@ -67,17 +67,15 @@ function applyReplacementRule(node) {
 
 hwReplacements = new Promise(function (resolve, reject) {
 
-    // chrome.runtime.sendMessage({loadHighlights: true, url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
-        // chrome.storage.local.set({"words" : response.data}, function(result) {
+    chrome.runtime.sendMessage({loadHighlights: true, url : "https://echoes.japanwest.cloudapp.azure.com/content/fetch", link: window.location.href}, function(response) {
+        chrome.storage.local.set({"words" : response.data}, function(result) {
 
-        // });
-        chrome.storage.local.set({"words" : ["action icon for that page", " content scripts"]}, function(result) { });
-        
+        });
         chrome.storage.local.get("words", function (items) {
             console.log(items);
             resolve(items);
         });
-    // });
+    });
 
 });
 
@@ -166,9 +164,9 @@ $(document).on('click', '.highlightBtn', function(e) {
     chrome.runtime.sendMessage({
         "loadHighlights": false,
         "hightlightedText": replaceText
-}, function(response) {
+    }, function(response) {
         // console.log(response);
-      });
+    });
 });
 
 document.body.innerHTML += '<span class="popup-tag"><button class="highlightBtn">highlight</button></span>';
