@@ -4,13 +4,15 @@
   "description": "This extension will be used for echox",
   "version": "1.0",
   "browser_action": {
-    "default_icon": "logo.png",
-    "default_popup": "popup.html"
+    "default_icon": "logo.png"
   },
   "background": {
     "scripts": [
       "background.js"
     ]
+  },
+  "chrome_url_overrides": {
+    "newtab": "main.html"
   },
   "content_scripts": [
     {
@@ -30,6 +32,7 @@
     }
   ],
   "permissions": [
+    "tabs",
     "activeTab",
     "http://*/",
     "storage",
