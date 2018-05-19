@@ -9,12 +9,22 @@
   </head>
   <body>
     <h1>Welcome to Echo</h1>
-    <button id="login">Login</button>
+    <div id="signIn">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" required>
 
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <button id="login">Login / Signup</button>
+    </div>
     <!-- Check for thee session here-->
-    <div>Welcome user1 - see your high</div>
-    <button id="login">Logout</button>
-    <button id="#clear">clear</button>
+    
+    <div id="signOut">
+      <div>Welcome user1 - see your high</div>
+      <button id="login">Logout</button>
+      <button id="#clear">clear</button>
+    </div>
     <div id="formHolder">
       Color: <input class="jscolor right">
       Auto reload: <input type="checkbox" id="autoReloadCheck">
