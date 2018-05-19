@@ -1,4 +1,6 @@
-var hwReplacements, highlightColor, finalColor;
+var hwReplacements;
+var replaceText;
+var selectionRangeClone;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
 
@@ -124,8 +126,9 @@ document.addEventListener('mouseup', function (e) {
         return;
     }
     if (window.getSelection && window.getSelection().getRangeAt) {
-        var replaceText = window.getSelection().toString();
-        var selectionRangeClone = window.getSelection().getRangeAt(0).cloneRange();
+        replaceText = window.getSelection().toString();
+        selectionRangeClone = window.getSelection().getRangeAt(0).cloneRange();
+        console.log('rangeclone', selectionRangeClone);
         
         $("span.popup-tag").css("display","block");
         $("span.popup-tag").css("top",e.clientY + 12 + window.scrollY );
@@ -133,13 +136,13 @@ document.addEventListener('mouseup', function (e) {
         
         range = window.getSelection().getRangeAt(0);
         console.log(window.getSelection().toString());
-        // range.deleteContents();
-        // var div = document.createElement("div");
-        // div.innerHTML = '<span>' + replaceText + '</span>';
+        range.deleteContents();
+        var div = document.createElement("div");
+        div.innerHTML = '<span>' + replaceText + '</span>';
         var frag = document.createDocumentFragment(), child;
-        // while ( (child = div.firstChild) ) {
-        //     frag.appendChild(child);
-        // }
+        while ( (child = div.firstChild) ) {
+            frag.appendChild(child);
+        }
         range.insertNode(frag);
     } else if (document.selection && document.selection.createRange) {
         range = document.selection.createRange();
@@ -151,10 +154,11 @@ $(document).on('click', '.highlightBtn', function(e) {
     $("span.popup-tag").css("display","none");
     var selectedText = window.getSelection().getRangeAt(0).extractContents();
     var span= document.createElement("span");
-    span.style.backgroundColor = "#"+finalColor;
+    span.style.backgroundColor = "yellow";
     span.appendChild(selectedText);
     window.getSelection().getRangeAt(0).insertNode(span);
-    chrome.runtime.sendMessage({"loadHighlights": false, "hightlightedText": selectedText}, function(response) {
+    console.log('replacing text -', replaceText);
+    chrome.runtime.sendMessage({"loadHighlights": false, "hightlightedText": replaceText, "range": selectionRangeClone}, function(response) {
         // console.log(response);
       });
 });

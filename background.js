@@ -23,7 +23,12 @@ chrome.runtime.onMessage.addListener(
         contentObj.author = "username";
         contentObj.address = sender.tab.url;
         contentObj.detail = request.hightlightedText;
-  
+        contentObj.startContainer = request.range.startContainer;
+        contentObj.startOffset = request.range.startOffset;
+        contentObj.endContainer = request.range.endContainer;
+        contentObj.endOffset = request.range.endOffset;
+        console.log('hit create highlight');
+        console.log('show object', contentObj)
         $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
               console.log(data);
           });  
