@@ -233,8 +233,12 @@ document.addEventListener('mouseup', function (e) {
 
 $(document).on('click', '.highlightBtn', function(e) {
     $("span.popup-tag").css("display","none");
-    var replaceText = window.getSelection().toString();
-    chrome.runtime.sendMessage({"hightlightedText": replaceText}, function(response) {
+    var selectedText = window.getSelection().getRangeAt(0).extractContents();
+    var span= document.createElement("span");
+    span.style.backgroundColor = "#"+finalColor;
+    span.appendChild(selectedText);
+    window.getSelection().getRangeAt(0).insertNode(span);
+    chrome.runtime.sendMessage({"hightlightedText": selectedText}, function(response) {
         // console.log(response);
       });
 });
