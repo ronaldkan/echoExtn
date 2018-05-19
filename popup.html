@@ -1,13 +1,30 @@
 <!doctype html>
-<html>
+<html style="width: 500px">
   <head>
-    <title>Echo Test</title>
+    <title>Echo Ext</title>
     <script src="socket.js"></script>
     <script src="popup.js"></script>
-    
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="font-awesome.min.css" />
   </head>
   <body>
-    <h1>Echo Test</h1>
-    <button id="checkPage">Test now!</button>
+    <h1>Welcome to Echo</h1>
+    <button id="login">Login</button>
+
+    <!-- Check for thee session here-->
+    <div>Welcome user1 - see your high</div>
+    <button id="login">Logout</button>
+    <button id="#clear">clear</button>
+    <div id="formHolder">
+      Color: <input class="jscolor right">
+      Auto reload: <input type="checkbox" id="autoReloadCheck">
+      <h3>Stored words</h3>
+      <hr/>
+      <ul class="wordList">
+      </ul>
+  </div>
   </body>
+  <script src="jquery.js"></script>
+  <script src="jscolor.min.js"></script>
+  <script src="content.js"></script>
 </html>

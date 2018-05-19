@@ -1,0 +1,48 @@
+html {
+    width: 350px;
+    height: 400px;
+}
+
+h1 {
+    text-align: center;
+}
+
+input {
+    width: 80%;
+}
+
+#formHolder {
+    width: 95%;
+    height: 100%;
+    margin: 10px;
+    font-size: 15px;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.wordList {
+    list-style: none;
+    margin-left: -30px;
+}
+
+.wordList li {
+    margin: 0 0 5px 0;
+}
+
+.fa-trash {
+    margin-right: 10px;
+}
+
+.selection_bubble {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background:-webkit-gradient(linear, left top, left bottom, from(#2e88c4), to(#075698));
+  }
