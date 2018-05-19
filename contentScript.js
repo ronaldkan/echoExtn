@@ -207,15 +207,15 @@ document.addEventListener('mouseup', function (e) {
     if (window.getSelection && window.getSelection().getRangeAt) {
         var replaceText = window.getSelection().toString();
         $("span.popup-tag").css("display","block");
-        $("span.popup-tag").css("top",event.clientY + 10);
-        $("span.popup-tag").css("left",event.clientX);
+        $("span.popup-tag").css("top",e.layerY + 10);
+        $("span.popup-tag").css("left",e.clientX);
         $("span.popup-tag").html('<button>highlight</button>');
         
         range = window.getSelection().getRangeAt(0);
         console.log(window.getSelection().toString());
         range.deleteContents();
         var div = document.createElement("div");
-        div.innerHTML = '<span style="background-color:yellow;">' + replaceText + '</span>';
+        div.innerHTML = '<span>' + replaceText + '</span>';
         var frag = document.createDocumentFragment(), child;
         while ( (child = div.firstChild) ) {
             frag.appendChild(child);
