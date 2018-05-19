@@ -2,6 +2,14 @@
     padding-right: 400px !important;
 }
 
+.show {
+  display: flex!important;
+}
+
+.hide {
+  display: none!important;
+}
+
 .popup-tag{
     position:absolute;
     display:none;
@@ -20,7 +28,7 @@
     width: 60px;
     height: 60px;
     top: 16px;
-    right: 16px;
+    right: 24px;
     z-index: 1000000;
     border: none!important;
     background-color: #0C9;
