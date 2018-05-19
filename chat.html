@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Chat</title>
-</head>
-
-<div class="chat">
+<div class="echo_chat">
 
   <div class="chat__sidebar">
     <div id="echo-title" class="echo-title"></div>
@@ -5275,8 +5265,9 @@ function scrollToBottom() {
 
 socket.on('connect', function () {
 	currentUserName = generateName();
-	var roomLocation = window.location.pathname.substring(1);
+	var roomLocation = window.location.href;
 	var params = {
+        room: roomLocation, 
 		name: currentUserName
 	};
 
@@ -5381,7 +5372,6 @@ function generateName(generator) {
 
     h3 {
       font-weight: 600;
-      text-align: center;
       font-size: 1.5rem;
     }
 
@@ -5471,7 +5461,7 @@ function generateName(generator) {
       padding: 10px;
     }
 
-    .chat {
+    .echo_chat {
       display: flex;
       flex-direction: column;
       top: 0;
@@ -5480,7 +5470,7 @@ function generateName(generator) {
       height: 100vh;
       width: 400px;
       position: fixed;
-      z-index: 999999;
+      z-index: 500000;
       background-color: #F5F5F5;
       border-left: 1px solid #e1e1e1;
     }

@@ -1,11 +1,38 @@
 var hwReplacements, highlightColor;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
+<<<<<<< HEAD
 document.body.classList.add("body-shift");
 console.log('heeeeelooo');
 // $.get(chrome.extension.getURL('/chat.html'), function(data) {
 //     $(data).appendTo('body');
 // });
+=======
+
+$('<button type="button"></button>').addClass('echo-float-button').appendTo('body');
+$('<i></i>').addClass('fa fa-comments-o echo-float-button-icon').appendTo($('.echo-float-button'));
+
+$(document).on('click','.echo-float-button', function () {
+    console.log('clicking');
+    if (document.body.classList.contains('body-shift')) {
+        $(".echo_chat").remove();
+        document.body.classList.remove("body-shift");
+    }
+    else {
+        document.body.classList.add("body-shift");
+        $.get(chrome.extension.getURL('/chat.html'), function (data) {
+            $(data).appendTo('body');
+        });
+    }
+});
+>>>>>>> 6f6d47223b4c2780ef1e4f9b05fcb864e1cf41ca
+
+
+function toggleScreen() {
+    event.preventDefault();
+    console.log('yipiyi');
+    return false;
+}
 
 function applyReplacementRule(node) {
     // Ignore any node whose tag is banned
@@ -18,7 +45,7 @@ function applyReplacementRule(node) {
 
             // Apply each replacement in order
             hwReplacements.then(function (replacements) {
-                if(replacements.words) {
+                if (replacements.words) {
                     replacements.words.forEach(function (replacement) {
                         //if( !replacement.active ) return;
                         var matchedText = v.textContent.match(new RegExp(replacement, "i"));
@@ -27,7 +54,7 @@ function applyReplacementRule(node) {
                             // Use `` instead of '' or "" if you want to use ${variable} inside a string
                             // For more information visit https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
                             highlightColor.then(function (item) {
-                                var color = (item.color.startsWith("#")) ? item.color : "#" + item.color ;
+                                var color = (item.color.startsWith("#")) ? item.color : "#" + item.color;
                                 var replacedText = node.innerHTML.replace(new RegExp(`(${replacement})`, "i"), `<span style="background-color: ${color}">$1</span>`);
 
                                 node.innerHTML = replacedText;
@@ -43,17 +70,16 @@ function applyReplacementRule(node) {
         });
     } catch (err) {
         // Basically this means that an iframe had a cross-domain source
-        if (err.name !== "SecurityError")
-        { throw err; }
+        if (err.name !== "SecurityError") { throw err; }
     }
 }
 
 function storeWords(wordList) {
     chrome.storage.local.set({ "words": wordList }, function () {
         // autoReload.then(function (value) {
-            // if(value.autoReload) {
-            //     window.location.reload();
-            // }
+        // if(value.autoReload) {
+        //     window.location.reload();
+        // }
         // });
     });
 }
@@ -94,7 +120,7 @@ chrome.extension.onMessage.addListener(function (message, sender, callback) {
     console.log(message);
     if (message.wordToHighlight) {
         hwReplacements.then(function (wordList) {
-            if(wordList.words) {
+            if (wordList.words) {
                 wordList.words.push(message.wordToHighlight);
                 storeWords(wordList.words);
             } else {
@@ -105,11 +131,11 @@ chrome.extension.onMessage.addListener(function (message, sender, callback) {
     }
 });
 
-$(function() {
+$(function () {
     $("body *").map(function (i, v) { applyReplacementRule(v); });
 
     hwReplacements.then(function (replacements) {
-        if(replacements.words) {
+        if (replacements.words) {
             replacements.words.forEach(function (replacement, index) {
                 $(".wordList").append(`<li>${replacement} <i class="fa fa-trash right" aria-hidden="true"></i></li>`);
             });
@@ -119,9 +145,9 @@ $(function() {
     });
 
     highlightColor.then(function (item) {
-        if(item.color) {
+        if (item.color) {
             $(".jscolor").val(item.color);
-            var color = (item.color.startsWith("#")) ? item.color : "#" + item.color ;
+            var color = (item.color.startsWith("#")) ? item.color : "#" + item.color;
             $(".highlight").css("background-color", color);
         }
     });
@@ -168,7 +194,7 @@ function replaceSelectionWithHtml(html) {
         var div = document.createElement("div");
         div.innerHTML = html;
         var frag = document.createDocumentFragment(), child;
-        while ( (child = div.firstChild) ) {
+        while ((child = div.firstChild)) {
             frag.appendChild(child);
         }
         range.insertNode(frag);
@@ -185,7 +211,7 @@ var endOffset = undefined;
 document.addEventListener('mouseup', function (e) {
     var range;
     if (window.getSelection().toString().length === 0) {
-        $("span.popup-tag").css("display","none");
+        $("span.popup-tag").css("display", "none");
         return;
     }
     if (window.getSelection && window.getSelection().getRangeAt) {
@@ -220,7 +246,7 @@ $(document).on('click', '.highlightBtn', function() {
 
 document.body.innerHTML += '<span class="popup-tag"><button class="highlightBtn">highlight</button></span>';
 
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.method == "getSelection")
         console.log(window.getSelection().toString());
-  });
+});

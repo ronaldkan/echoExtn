@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 /* .body-shift {
     padding-left: 400px !important;
 } */
+=======
+.body-shift {
+    padding-right: 400px !important;
+}
+>>>>>>> 6f6d47223b4c2780ef1e4f9b05fcb864e1cf41ca
 
 .popup-tag{
     position:absolute;
@@ -14,3 +20,27 @@
     cursor:pointer;
     -webkit-filter: drop-shadow(0 1px 10px rgba(113,158,206,0.8));
 }
+
+.echo-float-button {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    top: 16px;
+    right: 16px;
+    z-index: 1000000;
+    border: none!important;
+    background-color: #0C9;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.103);
+  }
+
+  .echo-float-button:focus {
+    border: none;
+    outline:none !important;
+  }
+
+  .echo-float-button-icon {
+    font-size:20px;
+  }
