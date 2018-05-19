@@ -1,4 +1,4 @@
-var hwReplacements, highlightColor, autoReload;
+var hwReplacements, highlightColor;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
 function applyReplacementRule(node) {
@@ -44,11 +44,11 @@ function applyReplacementRule(node) {
 
 function storeWords(wordList) {
     chrome.storage.local.set({ "words": wordList }, function () {
-        autoReload.then(function (value) {
-            if(value.autoReload) {
-                window.location.reload();
-            }
-        });
+        // autoReload.then(function (value) {
+            // if(value.autoReload) {
+            //     window.location.reload();
+            // }
+        // });
     });
 }
 
@@ -68,11 +68,11 @@ highlightColor = new Promise(function (resolve, reject) {
     });
 });
 
-autoReload = new Promise(function (resolve, reject) {
-    chrome.storage.local.get("autoReload", function (items) {
-        resolve(items);
-    });
-});
+// autoReload = new Promise(function (resolve, reject) {
+//     chrome.storage.local.get("autoReload", function (items) {
+//         resolve(items);
+//     });
+// });
 
 function getWordList() {
     var words = [];
@@ -85,6 +85,7 @@ function getWordList() {
 }
 
 chrome.extension.onMessage.addListener(function (message, sender, callback) {
+    console.log(message);
     if (message.wordToHighlight) {
         hwReplacements.then(function (wordList) {
             if(wordList.words) {
@@ -119,13 +120,13 @@ $(function() {
         }
     });
 
-    autoReload.then(function (value) {
-        if(value.autoReload) {
-            $("#autoReloadCheck").prop("checked", true);
-        } else {
-            $("#autoReloadCheck").prop("checked", false);
-        }
-    });
+    // autoReload.then(function (value) {
+    //     if(value.autoReload) {
+    //         $("#autoReloadCheck").prop("checked", true);
+    //     } else {
+    //         $("#autoReloadCheck").prop("checked", false);
+    //     }
+    // });
 
     $(document).on("click", ".fa-trash", function () {
         $(this).parent().remove();
@@ -136,16 +137,16 @@ $(function() {
         storeColor($(".jscolor").val());
     });
 
-    $("#autoReloadCheck").change(function (e) {
-        var checked;
-        if($(this).is(":checked")) {
-            checked = true;
-        } else {
-            checked = false;
-        }
+    // $("#autoReloadCheck").change(function (e) {
+    //     var checked;
+    //     if($(this).is(":checked")) {
+    //         checked = true;
+    //     } else {
+    //         checked = false;
+    //     }
 
-        chrome.storage.local.set({ "autoReload": checked }, function () { });
-    });
+    //     chrome.storage.local.set({ "autoReload": checked }, function () { });
+    // });
 });
 
 // Add bubble to the top of the page.

@@ -1,4 +1,5 @@
 function addHighlightableExpression(info, tab) {
+    console.log(info);
     chrome.tabs.query({
         "active": true,
         "currentWindow": true
