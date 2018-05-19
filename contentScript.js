@@ -1,6 +1,12 @@
 var hwReplacements, highlightColor, autoReload;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
+document.body.classList.add("body-shift");
+console.log('heeeeelooo');
+$.get(chrome.extension.getURL('/chat.html'), function(data) {
+    $(data).appendTo('body');
+});
+
 function applyReplacementRule(node) {
     // Ignore any node whose tag is banned
     if (!node || $.inArray(node.tagName, hwBannedTags) !== -1) { return; }
@@ -174,6 +180,3 @@ function renderBubble(mouseX, mouseY, selection) {
   bubbleDOM.style.left = mouseX + 'px';
   bubbleDOM.style.visibility = 'visible';
 }
-
-
-document.body.classList.add("body-shift");
