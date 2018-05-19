@@ -61,7 +61,7 @@ function storeColor(hexCode) {
 
 hwReplacements = new Promise(function (resolve, reject) {
 
-    chrome.runtime.sendMessage({url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
+    chrome.runtime.sendMessage({loadHighlights: true, url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
         chrome.storage.local.set({"words" : response.data}, function(result) {
 
         });
@@ -245,7 +245,7 @@ $(document).on('click', '.highlightBtn', function(e) {
     span.style.backgroundColor = "#"+finalColor;
     span.appendChild(selectedText);
     window.getSelection().getRangeAt(0).insertNode(span);
-    chrome.runtime.sendMessage({"hightlightedText": selectedText}, function(response) {
+    chrome.runtime.sendMessage({"loadHighlights": false, "hightlightedText": selectedText}, function(response) {
         // console.log(response);
       });
 });
