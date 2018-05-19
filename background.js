@@ -47,3 +47,18 @@ for (var i = 0; i < contexts.length; i++) {
         "onclick": addHighlightableExpression
     });
 }
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    var items = new Array();
+
+    var contentObj = new Object();
+        contentObj.address = request.link;
+
+    $.post(request.url, contentObj, function(data) {
+        for (var i = 0; i < data.content.length; i++) {
+            items.push(data.content[i].detail);
+        }
+        sendResponse({data: items});
+    })
+    return true;
+});
