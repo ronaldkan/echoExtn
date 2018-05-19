@@ -1,13 +1,6 @@
 var hwReplacements, highlightColor;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
-<<<<<<< HEAD
-document.body.classList.add("body-shift");
-console.log('heeeeelooo');
-// $.get(chrome.extension.getURL('/chat.html'), function(data) {
-//     $(data).appendTo('body');
-// });
-=======
 
 $('<button type="button"></button>').addClass('echo-float-button').appendTo('body');
 $('<i></i>').addClass('fa fa-comments-o echo-float-button-icon').appendTo($('.echo-float-button'));
@@ -25,7 +18,6 @@ $(document).on('click','.echo-float-button', function () {
         });
     }
 });
->>>>>>> 6f6d47223b4c2780ef1e4f9b05fcb864e1cf41ca
 
 
 function toggleScreen() {
