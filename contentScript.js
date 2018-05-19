@@ -1,4 +1,4 @@
-var hwReplacements, highlightColor;
+var hwReplacements, highlightColor, finalColor;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
 
@@ -19,12 +19,14 @@ $(document).on('click','.echo-float-button', function () {
     }
 });
 
-
 function toggleScreen() {
     event.preventDefault();
     console.log('yipiyi');
     return false;
 }
+
+var LAST_SELECTION,
+    LAST_ELEMENT;
 
 function applyReplacementRule(node) {
     // Ignore any node whose tag is banned
@@ -81,9 +83,16 @@ function storeColor(hexCode) {
 }
 
 hwReplacements = new Promise(function (resolve, reject) {
-    chrome.storage.local.get("words", function (items) {
-        resolve(items);
+
+    chrome.runtime.sendMessage({loadHighlights: true, url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
+        chrome.storage.local.set({"words" : response.data}, function(result) {
+
+        });
+        chrome.storage.local.get("words", function (items) {
+            resolve(items);
+        });
     });
+
 });
 
 highlightColor = new Promise(function (resolve, reject) {
@@ -109,8 +118,28 @@ function getWordList() {
 }
 
 chrome.extension.onMessage.addListener(function (message, sender, callback) {
-    console.log(message);
+    
+    // On message receive from background js of highlighting text
+    console.log(LAST_SELECTION);
+    var selectedText = LAST_SELECTION.extractContents();
+    var span= document.createElement("span");
+    span.style.backgroundColor = "#"+finalColor;
+    span.appendChild(selectedText);
+    LAST_SELECTION.insertNode(span);
+
     if (message.wordToHighlight) {
+
+        // var contentObj = new Object();
+        // contentObj.author = "username";
+        // contentObj.address = "aaa";
+        // contentObj.detail = message.wordToHighlight;
+
+        // console.log("contentObj", contentObj);
+        // $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
+        //     alert('posted');
+        //     console.log(data);
+        // });
+
         hwReplacements.then(function (wordList) {
             if (wordList.words) {
                 wordList.words.push(message.wordToHighlight);
@@ -121,6 +150,7 @@ chrome.extension.onMessage.addListener(function (message, sender, callback) {
             }
         });
     }
+    
 });
 
 $(function () {
@@ -137,7 +167,8 @@ $(function () {
     });
 
     highlightColor.then(function (item) {
-        if (item.color) {
+        if(item.color) {
+            finalColor = item.color;
             $(".jscolor").val(item.color);
             var color = (item.color.startsWith("#")) ? item.color : "#" + item.color;
             $(".highlight").css("background-color", color);
@@ -174,9 +205,11 @@ $(function () {
 });
 
 // Add bubble to the top of the page.
-var bubbleDOM = document.createElement('div');
-bubbleDOM.setAttribute('class', 'selection_bubble');
-document.body.appendChild(bubbleDOM);
+// var bubbleDOM = document.createElement('div');
+// bubbleDOM.setAttribute('class', 'selection_bubble');
+// document.body.appendChild(bubbleDOM);
+
+
 
 function replaceSelectionWithHtml(html) {
     var range;
@@ -202,39 +235,46 @@ var endOffset = undefined;
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
     var range;
+
     if (window.getSelection().toString().length === 0) {
         $("span.popup-tag").css("display", "none");
         return;
     }
     if (window.getSelection && window.getSelection().getRangeAt) {
         var replaceText = window.getSelection().toString();
+        var selectionRangeClone = window.getSelection().getRangeAt(0).cloneRange();
+        
         $("span.popup-tag").css("display","block");
-        $("span.popup-tag").css("top",event.clientY + 10);
-        $("span.popup-tag").css("left",event.clientX);
-        // $("span.popup-tag").html('<button class="highlightBtn">highlight</button>');
+        $("span.popup-tag").css("top",e.clientY + 12 + window.scrollY );
+        $("span.popup-tag").css("left",e.clientX + 20);
         
         range = window.getSelection().getRangeAt(0);
+        console.log(window.getSelection().toString());
         // range.deleteContents();
         // var div = document.createElement("div");
-        // div.innerHTML = '<span style="background-color:yellow;">' + replaceText + '</span>';
-        // var frag = document.createDocumentFragment(), child;
-        // while ((child = div.firstChild)) {
+        // div.innerHTML = '<span>' + replaceText + '</span>';
+        var frag = document.createDocumentFragment(), child;
+        // while ( (child = div.firstChild) ) {
         //     frag.appendChild(child);
         // }
-        // range.insertNode(frag);
+        range.insertNode(frag);
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.pasteHTML('<span style="font-weight:bold;">' + replaceText +'</span>');
     }
 }, false);
 
-$(document).on('click', '.highlightBtn', function() {
-    console.log('hello');
-    console.log(startNode);
-    console.log(endNode);
-    range = document.createRange();
-    range.setStart(startNode, startOffset);
-    range.setEnd(endNode, endOffset);
-    range.deleteContents();
+$(document).on('click', '.highlightBtn', function(e) {
+    $("span.popup-tag").css("display","none");
+    var selectedText = window.getSelection().getRangeAt(0).extractContents();
+    var span= document.createElement("span");
+    span.style.backgroundColor = "#"+finalColor;
+    span.appendChild(selectedText);
+    window.getSelection().getRangeAt(0).insertNode(span);
+    chrome.runtime.sendMessage({"loadHighlights": false, "hightlightedText": selectedText}, function(response) {
+        // console.log(response);
+      });
 });
-
 
 document.body.innerHTML += '<span class="popup-tag"><button class="highlightBtn">highlight</button></span>';
 
@@ -242,3 +282,10 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
     if (request.method == "getSelection")
         console.log(window.getSelection().toString());
 });
+
+
+document.body.addEventListener('contextmenu', function(e) {
+    LAST_SELECTION = window.getSelection().getRangeAt(0);
+    LAST_ELEMENT = e.target;
+    // this will update your last element every time you right click on some element in the page
+}, false);
