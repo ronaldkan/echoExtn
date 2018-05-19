@@ -1,4 +1,4 @@
-var hwReplacements, highlightColor, autoReload;
+var hwReplacements, highlightColor;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
 document.body.classList.add("body-shift");
@@ -50,11 +50,11 @@ function applyReplacementRule(node) {
 
 function storeWords(wordList) {
     chrome.storage.local.set({ "words": wordList }, function () {
-        autoReload.then(function (value) {
-            if(value.autoReload) {
-                window.location.reload();
-            }
-        });
+        // autoReload.then(function (value) {
+            // if(value.autoReload) {
+            //     window.location.reload();
+            // }
+        // });
     });
 }
 
@@ -74,11 +74,11 @@ highlightColor = new Promise(function (resolve, reject) {
     });
 });
 
-autoReload = new Promise(function (resolve, reject) {
-    chrome.storage.local.get("autoReload", function (items) {
-        resolve(items);
-    });
-});
+// autoReload = new Promise(function (resolve, reject) {
+//     chrome.storage.local.get("autoReload", function (items) {
+//         resolve(items);
+//     });
+// });
 
 function getWordList() {
     var words = [];
@@ -91,6 +91,7 @@ function getWordList() {
 }
 
 chrome.extension.onMessage.addListener(function (message, sender, callback) {
+    console.log(message);
     if (message.wordToHighlight) {
         hwReplacements.then(function (wordList) {
             if(wordList.words) {
@@ -125,13 +126,13 @@ $(function() {
         }
     });
 
-    autoReload.then(function (value) {
-        if(value.autoReload) {
-            $("#autoReloadCheck").prop("checked", true);
-        } else {
-            $("#autoReloadCheck").prop("checked", false);
-        }
-    });
+    // autoReload.then(function (value) {
+    //     if(value.autoReload) {
+    //         $("#autoReloadCheck").prop("checked", true);
+    //     } else {
+    //         $("#autoReloadCheck").prop("checked", false);
+    //     }
+    // });
 
     $(document).on("click", ".fa-trash", function () {
         $(this).parent().remove();
@@ -142,16 +143,16 @@ $(function() {
         storeColor($(".jscolor").val());
     });
 
-    $("#autoReloadCheck").change(function (e) {
-        var checked;
-        if($(this).is(":checked")) {
-            checked = true;
-        } else {
-            checked = false;
-        }
+    // $("#autoReloadCheck").change(function (e) {
+    //     var checked;
+    //     if($(this).is(":checked")) {
+    //         checked = true;
+    //     } else {
+    //         checked = false;
+    //     }
 
-        chrome.storage.local.set({ "autoReload": checked }, function () { });
-    });
+    //     chrome.storage.local.set({ "autoReload": checked }, function () { });
+    // });
 });
 
 // Add bubble to the top of the page.
@@ -159,24 +160,59 @@ var bubbleDOM = document.createElement('div');
 bubbleDOM.setAttribute('class', 'selection_bubble');
 document.body.appendChild(bubbleDOM);
 
+function replaceSelectionWithHtml(html) {
+    var range;
+    if (window.getSelection && window.getSelection().getRangeAt) {
+        range = window.getSelection().getRangeAt(0);
+        range.deleteContents();
+        var div = document.createElement("div");
+        div.innerHTML = html;
+        var frag = document.createDocumentFragment(), child;
+        while ( (child = div.firstChild) ) {
+            frag.appendChild(child);
+        }
+        range.insertNode(frag);
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.pasteHTML(html);
+    }
+}
+
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
-  var selection = window.getSelection().toString();
-  if (selection.length > 0) {
-    renderBubble(e.clientX, e.clientY, selection);
-  }
+    var range;
+    if (window.getSelection().toString().length === 0) {
+        $("span.popup-tag").css("display","none");
+        return;
+    }
+    if (window.getSelection && window.getSelection().getRangeAt) {
+        var replaceText = window.getSelection().toString();
+        $("span.popup-tag").css("display","block");
+        $("span.popup-tag").css("top",event.clientY + 10);
+        $("span.popup-tag").css("left",event.clientX);
+        $("span.popup-tag").html('<button>highlight</button>');
+        
+        range = window.getSelection().getRangeAt(0);
+        console.log(window.getSelection().toString());
+        range.deleteContents();
+        var div = document.createElement("div");
+        div.innerHTML = '<span style="background-color:yellow;">' + replaceText + '</span>';
+        var frag = document.createDocumentFragment(), child;
+        while ( (child = div.firstChild) ) {
+            frag.appendChild(child);
+        }
+        range.insertNode(frag);
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.pasteHTML('<span style="font-weight:bold;">' + replaceText +'</span>');
+    }
 }, false);
 
 
-// Close the bubble when we click on the screen.
-document.addEventListener('mousedown', function (e) {
-  bubbleDOM.style.visibility = 'hidden';
-}, false);
 
-// Move that bubble to the appropriate location.
-function renderBubble(mouseX, mouseY, selection) {
-  bubbleDOM.innerHTML = selection;
-  bubbleDOM.style.top = mouseY + 'px';
-  bubbleDOM.style.left = mouseX + 'px';
-  bubbleDOM.style.visibility = 'visible';
-}
+document.body.innerHTML += '<span class="popup-tag"></span>';
+
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.method == "getSelection")
+        console.log(window.getSelection().toString());
+  });

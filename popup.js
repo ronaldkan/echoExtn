@@ -2,9 +2,9 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     chrome.storage.local.get("uname", function (obj) {
-        if (Object.keys(obj).length === 0){
+        if (Object.keys(obj).length === 0) {
             hideSignOut(); 
-        }else {
+        } else {
             var unameDisplay = document.getElementById('unameDisplay');
             unameDisplay.innerHTML = "Welcome user "+obj.uname+" to Echo!";
             hideSignIn();
@@ -13,38 +13,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var signInButton = document.getElementById('login');
     signInButton.addEventListener('click', function() {
-        var uname = document.getElementById('uname');
-        chrome.storage.local.set({ "uname": uname.value }, function () { });
-        window.location.reload();
+        signIn();
     });
 
     var signOutButton = document.getElementById('logout');
     signOutButton.addEventListener('click', function() {
-        chrome.storage.local.remove("uname", function () {
-            window.location.reload();
-         });
+        signOut();
     });
 
-    var checkPageButton = document.getElementById('checkPage');
-    checkPageButton.addEventListener('click', function() {
-        console.log('clicked');
-        var xhr = new XMLHttpRequest();
-        http://localhost:3001/test
-        xhr.open("GET", "http://localhost:3001/test", true);
-        xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-            // JSON.parse does not evaluate the attacker's scripts.
-            var resp = JSON.parse(xhr.responseText);
-            console.log(resp);
-        }
-        }
-        xhr.send();
-    });
+    // var checkPageButton = document.getElementById('checkPage');
+    // checkPageButton.addEventListener('click', function() {
+    //     console.log('clicked');
+    //     var xhr = new XMLHttpRequest();
+    //     http://localhost:3001/test
+    //     xhr.open("GET", "http://localhost:3001/test", true);
+    //     xhr.onreadystatechange = function() {
+    //     if (xhr.readyState == 4) {
+    //         // JSON.parse does not evaluate the attacker's scripts.
+    //         var resp = JSON.parse(xhr.responseText);
+    //         console.log(resp);
+    //     }
+    //     }
+    //     xhr.send();
+    // });
 
   }, false);
 
 console.log('page on load test');
 var socket = io('http://localhost:3001');
+
+function signIn() 
+{
+    var uname = document.getElementById('uname').value;
+    var password = document.getElementById('psw').value;
+    $.post("http://40.74.71.24/login", {username: uname, password: password}, function(data, status) { 
+        if (Object.keys(data).length === 0) {
+            register();
+        } else {
+            chrome.storage.local.set({ "uname": data.content.name }, function () { });
+            window.location.reload();
+        }
+    });
+}
+
+function register() 
+{
+    var uname = document.getElementById('uname').value;
+    var password = document.getElementById('psw').value;
+    $.post("http://40.74.71.24/register", {username: uname, password: password}, function(data, status) { 
+        chrome.storage.local.set({ "uname": data.content.name }, function () { });
+        window.location.reload();
+    });
+}
+
+function signOut() 
+{
+    chrome.storage.local.remove("uname", function () {
+        window.location.reload();
+    });
+}
 
 function hideSignIn()  
 {  
