@@ -3,9 +3,9 @@ var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
 document.body.classList.add("body-shift");
 console.log('heeeeelooo');
-$.get(chrome.extension.getURL('/chat.html'), function(data) {
-    $(data).appendTo('body');
-});
+// $.get(chrome.extension.getURL('/chat.html'), function(data) {
+//     $(data).appendTo('body');
+// });
 
 function applyReplacementRule(node) {
     // Ignore any node whose tag is banned
@@ -177,7 +177,10 @@ function replaceSelectionWithHtml(html) {
         range.pasteHTML(html);
     }
 }
-
+var startNode = undefined;
+var endNode = undefined;
+var startOffset = undefined;
+var endOffset = undefined;
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
     var range;
@@ -190,27 +193,32 @@ document.addEventListener('mouseup', function (e) {
         $("span.popup-tag").css("display","block");
         $("span.popup-tag").css("top",event.clientY + 10);
         $("span.popup-tag").css("left",event.clientX);
-        $("span.popup-tag").html('<button>highlight</button>');
+        // $("span.popup-tag").html('<button class="highlightBtn">highlight</button>');
         
         range = window.getSelection().getRangeAt(0);
-        console.log(window.getSelection().toString());
-        range.deleteContents();
-        var div = document.createElement("div");
-        div.innerHTML = '<span style="background-color:yellow;">' + replaceText + '</span>';
-        var frag = document.createDocumentFragment(), child;
-        while ( (child = div.firstChild) ) {
-            frag.appendChild(child);
-        }
-        range.insertNode(frag);
-    } else if (document.selection && document.selection.createRange) {
-        range = document.selection.createRange();
-        range.pasteHTML('<span style="font-weight:bold;">' + replaceText +'</span>');
+        // range.deleteContents();
+        // var div = document.createElement("div");
+        // div.innerHTML = '<span style="background-color:yellow;">' + replaceText + '</span>';
+        // var frag = document.createDocumentFragment(), child;
+        // while ((child = div.firstChild)) {
+        //     frag.appendChild(child);
+        // }
+        // range.insertNode(frag);
     }
 }, false);
 
+$(document).on('click', '.highlightBtn', function() {
+    console.log('hello');
+    console.log(startNode);
+    console.log(endNode);
+    range = document.createRange();
+    range.setStart(startNode, startOffset);
+    range.setEnd(endNode, endOffset);
+    range.deleteContents();
+});
 
 
-document.body.innerHTML += '<span class="popup-tag"></span>';
+document.body.innerHTML += '<span class="popup-tag"><button class="highlightBtn">highlight</button></span>';
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.method == "getSelection")

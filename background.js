@@ -1,3 +1,9 @@
+chrome.browserAction.onClicked.addListener(function(activeTab){
+    var newURL = "http://stackoverflow.com/";
+    chrome.tabs.create({ url: chrome.runtime.getURL("main.html") } );
+  });
+
+
 function addHighlightableExpression(info, tab) {
     console.log(info);
     chrome.tabs.query({
