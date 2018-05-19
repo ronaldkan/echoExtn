@@ -11,10 +11,14 @@ $.get(chrome.extension.getURL('/chat.html'), function (data) {
 $(document).on('click','.echo-float-button', function () {
     console.log('clicking');
     if (document.body.classList.contains('body-shift')) {
+        $(".echo-float-button").empty();
+        $('<i></i>').addClass('fa fa-comments-o echo-float-button-icon').appendTo($('.echo-float-button'));
         $(".echo_chat").addClass('hide').removeClass('show');
         document.body.classList.remove("body-shift");
     }
     else {
+        $(".echo-float-button").empty();
+        $('<i></i>').addClass('fa fa-times echo-float-button-icon').appendTo($('.echo-float-button'));
         $(".echo_chat").addClass('show').removeClass('hide');
         document.body.classList.add("body-shift");
     }
