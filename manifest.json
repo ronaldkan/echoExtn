@@ -19,14 +19,12 @@
         "https://*/*"
       ],
       "css": [
+        "font-awesome.min.css",
         "contentScript.css"
       ],
       "js": [
         "jquery.js",
         "socket.js",
-        "js/chat.js",
-        "js/moment.js",
-        "js/mustache.js",
         "contentScript.js"
       ]
     }
@@ -38,6 +36,7 @@
     "contextMenus"
   ],
   "web_accessible_resources": [
-    "chat.html"
+    "chat.html",
+    "button.html"
   ]
 }
