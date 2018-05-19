@@ -1,23 +1,24 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    
-    chrome.storage.local.get("uname", function (uname) {
-        console.log('name',uname);
-        if (Object.keys(uname).length === 0){
+    chrome.storage.local.get("uname", function (obj) {
+        if (Object.keys(obj).length === 0){
             hideSignOut(); 
         }else {
+            var unameDisplay = document.getElementById('unameDisplay');
+            unameDisplay.innerHTML = "Welcome user "+obj.uname+" to Echo!";
             hideSignIn();
         }
     });
 
-    var signInButton = document.getElementById('signIn');
+    var signInButton = document.getElementById('login');
     signInButton.addEventListener('click', function() {
-        chrome.storage.local.set({ "uname": "random" }, function () { });
+        var uname = document.getElementById('uname');
+        chrome.storage.local.set({ "uname": uname.value }, function () { });
         window.location.reload();
     });
 
-    var signOutButton = document.getElementById('signOut');
+    var signOutButton = document.getElementById('logout');
     signOutButton.addEventListener('click', function() {
         chrome.storage.local.remove("uname", function () {
             window.location.reload();

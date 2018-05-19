@@ -8,10 +8,10 @@
     <link rel="stylesheet" type="text/css" href="font-awesome.min.css" />
   </head>
   <body>
-    <h1>Welcome to Echo</h1>
+    <h1>The Echo Learner</h1>
     <div id="signIn">
       <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
 
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="psw" required>
@@ -21,13 +21,12 @@
     <!-- Check for thee session here-->
     
     <div id="signOut">
-      <div>Welcome user1 - see your high</div>
-      <button id="login">Logout</button>
-      <button id="#clear">clear</button>
+      <div id="unameDisplay"></div>
+      <button id="logout">Logout</button>
     </div>
     <div id="formHolder">
-      Color: <input class="jscolor right">
-      Auto reload: <input type="checkbox" id="autoReloadCheck">
+      <div>Color: <input class="jscolor right"><br/></div>
+      <div>Auto reload: <input type="checkbox" id="autoReloadCheck"></div>
       <h3>Stored words</h3>
       <hr/>
       <ul class="wordList">
