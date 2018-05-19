@@ -88,13 +88,28 @@ function getWordList() {
 }
 
 chrome.extension.onMessage.addListener(function (message, sender, callback) {
+    
+    // On message receive from background js of highlighting text
     console.log(LAST_SELECTION);
     var selectedText = LAST_SELECTION.extractContents();
     var span= document.createElement("span");
     span.style.backgroundColor = "#"+finalColor;
     span.appendChild(selectedText);
     LAST_SELECTION.insertNode(span);
+
     if (message.wordToHighlight) {
+
+        // var contentObj = new Object();
+        // contentObj.author = "username";
+        // contentObj.address = "aaa";
+        // contentObj.detail = message.wordToHighlight;
+
+        // console.log("contentObj", contentObj);
+        // $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
+        //     alert('posted');
+        //     console.log(data);
+        // });
+
         hwReplacements.then(function (wordList) {
             if(wordList.words) {
                 wordList.words.push(message.wordToHighlight);

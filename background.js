@@ -1,4 +1,16 @@
 function addHighlightableExpression(info, tab) {
+    console.log("info", info);
+    var contentObj = new Object();
+        contentObj.author = "username";
+        contentObj.address = info.pageUrl;
+        contentObj.detail = info.selectionText;
+
+        console.log("contentObj", contentObj);
+        $.post("http://40.74.71.24/content", contentObj, function(data, status) { 
+            alert('posted');
+            console.log(data);
+        });
+
     chrome.tabs.query({
         "active": true,
         "currentWindow": true
