@@ -28,64 +28,58 @@ function toggleScreen() {
     return false;
 }
 
-// function applyReplacementRule(node) {
-//     // Ignore any node whose tag is banned
-//     if (!node || $.inArray(node.tagName, hwBannedTags) !== -1) { return; }
+function applyReplacementRule(node) {
+    // Ignore any node whose tag is banned
+    if (!node || $.inArray(node.tagName, hwBannedTags) !== -1) { return; }
 
-//     try {
-//         $(node).contents().each(function (i, v) {
-//             // Ignore any child node that has been replaced already or doesn't contain text
-//             if (v.isReplaced || v.nodeType !== Node.TEXT_NODE) { return; }
+    try {
+        $(node).contents().each(function (i, v) {
+            // Ignore any child node that has been replaced already or doesn't contain text
+            if (v.isReplaced || v.nodeType !== Node.TEXT_NODE) { return; }
 
-//             // Apply each replacement in order
-//             hwReplacements.then(function (replacements) {
-//                 if (replacements.words) {
-//                     replacements.words.forEach(function (replacement) {
-//                         //if( !replacement.active ) return;
-//                         var matchedText = v.textContent.match(new RegExp(replacement, "i"));
+            // Apply each replacement in order
+            hwReplacements.then(function (replacements) {
+                if (replacements.words) {
+                    replacements.words.forEach(function (replacement) {
+                        //if( !replacement.active ) return;
+                        var matchedText = v.textContent.match(new RegExp(replacement, "i"));
 
-//                         if (matchedText) {
-//                             // Use `` instead of '' or "" if you want to use ${variable} inside a string
-//                             // For more information visit https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-//                             highlightColor.then(function (item) {
-//                                 var color = (item.color.startsWith("#")) ? item.color : "#" + item.color;
-//                                 var replacedText = node.innerHTML.replace(new RegExp(`(${replacement})`, "i"), `<span style="background-color: ${color}">$1</span>`);
+                        if (matchedText) {
+                            // Use `` instead of '' or "" if you want to use ${variable} inside a string
+                            // For more information visit https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+                                var replacedText = node.innerHTML.replace(new RegExp(`(${replacement})`, "i"), `<span style="background-color: yellow">$1</span>`);
+                                node.innerHTML = replacedText;
+                            
+                        }
+                    });
+                }
+            }).catch(function (reason) {
+                console.log("Handle rejected promise (" + reason + ") here.");
+            });
 
-//                                 node.innerHTML = replacedText;
-//                             });
-//                         }
-//                     });
-//                 }
-//             }).catch(function (reason) {
-//                 console.log("Handle rejected promise (" + reason + ") here.");
-//             });
+            v.isReplaced = true;
+        });
+    } catch (err) {
+        // Basically this means that an iframe had a cross-domain source
+        if (err.name !== "SecurityError") { throw err; }
+    }
+}
 
-//             v.isReplaced = true;
-//         });
-//     } catch (err) {
-//         // Basically this means that an iframe had a cross-domain source
-//         if (err.name !== "SecurityError") { throw err; }
-//     }
-// }
+hwReplacements = new Promise(function (resolve, reject) {
 
-// hwReplacements = new Promise(function (resolve, reject) {
+    // chrome.runtime.sendMessage({loadHighlights: true, url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
+        // chrome.storage.local.set({"words" : response.data}, function(result) {
 
-//     chrome.runtime.sendMessage({loadHighlights: true, url : "http://40.74.71.24/content", link: window.location.href}, function(response) {
-//         chrome.storage.local.set({"words" : response.data}, function(result) {
+        // });
+        chrome.storage.local.set({"words" : ["action icon for that page", " content scripts"]}, function(result) { });
+        
+        chrome.storage.local.get("words", function (items) {
+            console.log(items);
+            resolve(items);
+        });
+    // });
 
-//         });
-//         chrome.storage.local.get("words", function (items) {
-//             resolve(items);
-//         });
-//     });
-
-// });
-
-// highlightColor = new Promise(function (resolve, reject) {
-//     chrome.storage.local.get("color", function (item) {
-//         resolve(item);
-//     });
-// });
+});
 
 $(function () {
     $("body *").map(function (i, v) { applyReplacementRule(v); });
@@ -157,9 +151,22 @@ $(document).on('click', '.highlightBtn', function(e) {
     span.style.backgroundColor = "yellow";
     span.appendChild(selectedText);
     window.getSelection().getRangeAt(0).insertNode(span);
-    console.log('replacing text -', replaceText);
+    // console.log('replacing text -', replaceText);
     window.getSelection().empty();
-    chrome.runtime.sendMessage({"loadHighlights": false, "hightlightedText": replaceText, "range": selectionRangeClone}, function(response) {
+    // console.log('before send', selectionRangeClone);
+    // Faking saving of highlights to server
+    // hwReplacements.then( (t) => {
+    //     return chrome.storage.local.set({"words" : t.words.concat([replaceText])}, function(result) {})
+    // });
+    
+    // chrome.storage.local.set({"words" : }, function(result) {
+    
+    // }
+
+    chrome.runtime.sendMessage({
+        "loadHighlights": false,
+        "hightlightedText": replaceText
+}, function(response) {
         // console.log(response);
       });
 });
