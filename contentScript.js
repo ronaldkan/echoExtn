@@ -1,5 +1,8 @@
-var hwReplacements, highlightColor;
+var hwReplacements, highlightColor, finalColor;
 var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
+
+var LAST_SELECTION,
+    LAST_ELEMENT;
 
 function applyReplacementRule(node) {
     // Ignore any node whose tag is banned
@@ -85,7 +88,12 @@ function getWordList() {
 }
 
 chrome.extension.onMessage.addListener(function (message, sender, callback) {
-    console.log(message);
+    console.log(LAST_SELECTION);
+    var selectedText = LAST_SELECTION.extractContents();
+    var span= document.createElement("span");
+    span.style.backgroundColor = "#"+finalColor;
+    span.appendChild(selectedText);
+    LAST_SELECTION.insertNode(span);
     if (message.wordToHighlight) {
         hwReplacements.then(function (wordList) {
             if(wordList.words) {
@@ -97,6 +105,7 @@ chrome.extension.onMessage.addListener(function (message, sender, callback) {
             }
         });
     }
+    
 });
 
 $(function() {
@@ -114,6 +123,7 @@ $(function() {
 
     highlightColor.then(function (item) {
         if(item.color) {
+            finalColor = item.color;
             $(".jscolor").val(item.color);
             var color = (item.color.startsWith("#")) ? item.color : "#" + item.color ;
             $(".highlight").css("background-color", color);
@@ -176,5 +186,10 @@ function renderBubble(mouseX, mouseY, selection) {
   bubbleDOM.style.visibility = 'visible';
 }
 
+document.body.addEventListener('contextmenu', function(e) {
+    LAST_SELECTION = window.getSelection().getRangeAt(0);
+    LAST_ELEMENT = e.target;
+    // this will update your last element every time you right click on some element in the page
+}, false);
 
 document.body.classList.add("body-shift");
