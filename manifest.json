@@ -2,13 +2,20 @@
   "manifest_version": 2,
 
   "name": "Echo",
-  "description": "Use echo!",
+  "description": "This extension will be used for echox",
   "version": "1.0",
 
   "browser_action": {
    "default_icon": "logo.png",
    "default_popup": "popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      
+      "js": ["contentScript.js"]
+    }
+  ],
   "background": {
     "scripts": [
       "background.js"
@@ -20,9 +27,12 @@
         "http://*/*",
         "https://*/*"
       ],
+	  "css": [
+        "contentScript.css"
+      ],
       "js": [
         "jquery.js",
-        "content.js"
+        "contentScript.js"
       ]
     }
   ],
