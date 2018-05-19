@@ -4,18 +4,19 @@ var hwBannedTags = ["STYLE", "SCRIPT", "NOSCRIPT", "TEXTAREA"];
 
 $('<button type="button"></button>').addClass('echo-float-button').appendTo('body');
 $('<i></i>').addClass('fa fa-comments-o echo-float-button-icon').appendTo($('.echo-float-button'));
+$.get(chrome.extension.getURL('/chat.html'), function (data) {
+    $(data).addClass('hide').appendTo('body');
+});
 
 $(document).on('click','.echo-float-button', function () {
     console.log('clicking');
     if (document.body.classList.contains('body-shift')) {
-        $(".echo_chat").remove();
+        $(".echo_chat").addClass('hide').removeClass('show');
         document.body.classList.remove("body-shift");
     }
     else {
+        $(".echo_chat").addClass('show').removeClass('hide');
         document.body.classList.add("body-shift");
-        $.get(chrome.extension.getURL('/chat.html'), function (data) {
-            $(data).appendTo('body');
-        });
     }
 });
 
