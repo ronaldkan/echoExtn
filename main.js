@@ -40,12 +40,12 @@ $('#checkSwitch').on('click', function() {
         $('.title1').hide();
         // savedHighlights
         $(".list-group").empty();
-        savedHighlights.forEach((e) => e.author === localStorage.getItem("echoUserName") ? $(".list-group").prepend("<li class=\"list-group-item\">"+e.detail+"</li>") : '' );
+        savedHighlights.forEach((e) => e.author === localStorage.getItem("echoUserName") ? $(".list-group").prepend("<li class=\"list-group-item\"><a style=\"color:#1863b3\" target=\"_blank\" href=\""+e.address+"\">"+e.detail+"</a></li>") : '' );
     } else {
         $('.title2').hide();
         $('.title1').fadeIn();
         $(".list-group").empty();
-        savedHighlights.forEach((e) => $(".list-group").prepend("<li class=\"list-group-item\">"+e.detail+"</li>"));
+        savedHighlights.forEach((e) => $(".list-group").prepend("<li class=\"list-group-item\"><a style=\"color:#1863b3\" target=\"_blank\" href=\""+e.address+"\">"+e.detail+"</a></li>"));
     }
     console.log($('#checkSwitch')[0].checked);
 });
@@ -53,5 +53,5 @@ $('#checkSwitch').on('click', function() {
 $.ajax({url: "https://echoes.japanwest.cloudapp.azure.com/content", success: function(result){
     console.log(result.content);
     savedHighlights = result.content;
-    savedHighlights.forEach((e) => $(".list-group").prepend("<li class=\"list-group-item\">"+e.detail+"</li>"));
+    savedHighlights.forEach((e) => $(".list-group").prepend("<li class=\"list-group-item\"><a style=\"color:#1863b3\" target=\"_blank\" href=\""+e.address+"\">"+e.detail+"</a></li>"));
 }});

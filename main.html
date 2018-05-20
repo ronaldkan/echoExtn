@@ -20,9 +20,19 @@ input[type=text] {
 	box-sizing: border-box;
 }
 
-html{
+html {
 	font: normal 16px sans-serif;
 	color: #555;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
 }
 
 ul, nav{
@@ -523,6 +533,7 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
 </style>
 <html>
 <head>
@@ -539,7 +550,7 @@ input:checked + .slider:before {
 </head>
 
 <body>
-	<h1 class="headerDisplay" style="position: fixed; top: 30px; right: 30px; display:none;">Hello, <span class="userName"></span>. <i style="margin-left: 10px;" class="fa fa-sign-out fa-1x onSignout" aria-hidden="true"></i></h1>
+	<h1 class="headerDisplay" style="position: absolute; top: 30px; right: 30px; display:none;">Hello, <span class="userName"></span>. <i style="margin-left: 10px;" class="fa fa-sign-out fa-1x onSignout" aria-hidden="true"></i></h1>
 	<section class="hero" style="display: none">
         <img style="border-radius: 15px; height: 150px; margin-bottom: 40px;" src="logo.png"/>
 		<div class="background-image" style="background-image: url(img/echo-bg.png);"></div>
@@ -555,7 +566,6 @@ input:checked + .slider:before {
 		</label>
 		<h3 class="title1">Echoes By Everyone</h3>
 		<h3 class="title2" style="display: none";>Echoes By You</h3>
-		<hr>
 
 		<ul class="grid">
 			<li class="small" style="background-image: url(img/coast.jpg);"></li>
