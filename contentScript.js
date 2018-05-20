@@ -169,6 +169,7 @@ $(document).on('click', '.highlightBtn', function(e) {
 });
 
 $(document).on('click', '.shareBtn', function() {
+    $("span.popup-tag").css("display","none");
     var name = localStorage.getItem("echoUserName");
     var highlightedStr = window.getSelection().toString();
     var messge = '["' + highlightedStr + '"]';
