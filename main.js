@@ -41,6 +41,6 @@ $('#checkSwitch').on('click', function() {
     }
     console.log($('#checkSwitch')[0].checked);
 });
-// $.ajax({url: "https://echoes.japanwest.cloudapp.azure.com/content", success: function(result){
-//     console.log(result);
-// }});
+$.ajax({url: "https://echoes.japanwest.cloudapp.azure.com/content", success: function(result){
+    console.log(result);
+}});
