@@ -45,6 +45,20 @@
     </li>
   </script>
 
+  <script id="quote-message-template" type="text/template">
+    <li class="user-message">
+      <div class="message__wraper green right">
+      <div class="message__title right">
+        <p class="echo-from">{{from}}-<i>Quoted</i></p>
+        <span>{{createdAt}}</span>
+      </div>
+      <div class="message_body right">
+         <p>{{text}}</p>
+      </div>
+    </div>
+    </li>
+  </script>
+
   <script id="admin-message-template" type="text/template">
     <li class="admin-message">
       <div class="message__wraper lightgrey">
@@ -5302,7 +5316,17 @@ socket.on('newMessage', function (message) {
 		// html = Mustache.render(template, {
 		// 	text: message.text
 		// });
-	}
+	} else if (message.text.indexOf('["') != -1) {
+        template = jQuery('#message-template').html();
+		if (message.from === currentUserName) {
+			template = jQuery('#quote-message-template').html();
+		}
+		html = Mustache.render(template, {
+			text: message.text,
+			from: message.from,
+			createdAt: formattedTime
+		});
+    }
 	else {
 		template = jQuery('#message-template').html();
 		if (message.from === currentUserName) {
@@ -5589,6 +5613,10 @@ function generateName(generator) {
 
     .bisque {
       background-color: bisque;
+    }
+
+    .green {
+        background-color:khaki;
     }
 
     .lightblue {

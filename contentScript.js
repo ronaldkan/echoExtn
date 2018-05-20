@@ -51,7 +51,7 @@ function applyReplacementRule(node) {
                         if (matchedText) {
                             // Use `` instead of '' or "" if you want to use ${variable} inside a string
                             // For more information visit https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-                                var replacedText = node.innerHTML.replace(new RegExp(`(${replacement})`, "i"), `<span style="background-color: yellow">$1</span>`);
+                                var replacedText = node.innerHTML.replace(new RegExp(`(${replacement})`, "i"), `<span class="replacedItem" style="background-color: yellow">$1</span>`);
                                 node.innerHTML = replacedText;
                             
                         }
@@ -113,6 +113,19 @@ function replaceSelectionWithHtml(html) {
 document.addEventListener('mouseup', function (e) {
     var range;
 
+    if (window.getSelection().toString().indexOf('["') !== -1) {
+        var message = window.getSelection().toString().replace('["', "").replace('"]', "");
+        console.log(message);
+        $('.replacedItem').each(function(data, value) {
+            console.log(value.textContent);
+            
+            if (value.textContent === message) {
+                console.log('hello1231');
+                value.scrollIntoView();
+            }
+        });
+    }
+
     if (window.getSelection().toString().length === 0) {
         $("span.popup-tag").css("display", "none");
         return;
@@ -120,7 +133,6 @@ document.addEventListener('mouseup', function (e) {
     if (window.getSelection && window.getSelection().getRangeAt) {
         replaceText = window.getSelection().toString();
         selectionRangeClone = window.getSelection().getRangeAt(0).cloneRange();
-        console.log('rangeclone', selectionRangeClone);
         
         $("span.popup-tag").css("display","block");
         $("span.popup-tag").css("top",e.clientY + 12 + window.scrollY );
@@ -172,8 +184,32 @@ $(document).on('click', '.shareBtn', function() {
     $("span.popup-tag").css("display","none");
     var name = localStorage.getItem("echoUserName");
     var highlightedStr = window.getSelection().toString();
-    var messge = '["' + highlightedStr + '"]';
+    var selectedText = window.getSelection().getRangeAt(0).extractContents();
     
+    var span= document.createElement("span");
+    span.style.backgroundColor = "yellow";
+    span.setAttribute("class", "replacedItem");
+    span.appendChild(selectedText);
+    window.getSelection().getRangeAt(0).insertNode(span);
+    // console.log('replacing text -', replaceText);
+    // console.log('before send', selectionRangeClone);
+    // Faking saving of highlights to server
+    // hwReplacements.then( (t) => {
+    //     return chrome.storage.local.set({"words" : t.words.concat([replaceText])}, function(result) {})
+    // });
+    
+    // chrome.storage.local.set({"words" : }, function(result) {
+    
+    // }
+    chrome.runtime.sendMessage({
+        "loadHighlights": false,
+        "hightlightedText": replaceText
+    }, function(response) {
+        // console.log(response);
+    });
+    
+    var messge = '["' + highlightedStr + '"]';
+    window.getSelection().empty();
     chrome.runtime.sendMessage({
                 doSendMessage: true,
                 url : "https://echoes.japanwest.cloudapp.azure.com/send", 
