@@ -30,17 +30,28 @@ $('.onSignout').on('click', function() {
     $('.our-work').fadeOut();
 });
 
+var savedHighlights; 
+var filteredHighlights; 
+
 $('#checkSwitch').on('click', function() {
     var trueFalse = $('#checkSwitch')[0].checked;
     if (trueFalse === true) {
         $('.title2').fadeIn();
         $('.title1').hide();
+        // savedHighlights
+        $(".list-group").empty();
+        savedHighlights.forEach((e) => e.author === localStorage.getItem("echoUserName") ? $(".list-group").prepend("<li class=\"list-group-item\">"+e.detail+"</li>") : '' );
     } else {
         $('.title2').hide();
         $('.title1').fadeIn();
+        $(".list-group").empty();
+        savedHighlights.forEach((e) => $(".list-group").prepend("<li class=\"list-group-item\">"+e.detail+"</li>"));
     }
     console.log($('#checkSwitch')[0].checked);
 });
+
 $.ajax({url: "https://echoes.japanwest.cloudapp.azure.com/content", success: function(result){
-    console.log(result);
+    console.log(result.content);
+    savedHighlights = result.content;
+    savedHighlights.forEach((e) => $(".list-group").prepend("<li class=\"list-group-item\">"+e.detail+"</li>"));
 }});
