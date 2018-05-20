@@ -168,13 +168,19 @@ $(document).on('click', '.highlightBtn', function(e) {
     });
 });
 
-// $(document).on('click', '.shareBtn', function() {
-//     console.log(socket);
-//     chrome.runtime.sendMessage({loadHighlights: true, url : "https://echoes.japanwest.cloudapp.azure.com/content/fetch", 
-//                 message: window.location.href
-//                 username: }, function(response) {
-//     });
-// });
+$(document).on('click', '.shareBtn', function() {
+    $("span.popup-tag").css("display","none");
+    var name = localStorage.getItem("echoUserName");
+    var highlightedStr = window.getSelection().toString();
+    var messge = '["' + highlightedStr + '"]';
+    
+    chrome.runtime.sendMessage({
+                doSendMessage: true,
+                url : "https://echoes.japanwest.cloudapp.azure.com/send", 
+                message: messge,
+                name: name}, function(response) {
+    });
+});
 
 document.body.innerHTML += '<span class="popup-tag"> ' +
     '<button class="highlightBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>' +
