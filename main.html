@@ -82,7 +82,14 @@ section{
 
 }
 
-section h3.title{
+section h3.title1{
+	color: #414a4f;
+	text-transform: capitalize; 
+	font: bold 32px 'Open Sans', sans-serif;
+	margin-bottom: 35px;
+	text-align: center;
+}
+section h3.title2{
 	color: #414a4f;
 	text-transform: capitalize; 
 	font: bold 32px 'Open Sans', sans-serif;
@@ -457,6 +464,65 @@ footer p a{
 @media (max-width: 1200px) {
 	#bsaHolder{ display:none;}
 }
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <html>
 <head>
@@ -471,23 +537,28 @@ footer p a{
 </head>
 
 <body>
-
-	<section class="hero">
+	<h1 class="headerDisplay" style="position: fixed; top: 30px; right: 30px; display:none;">Hello, <span class="userName"></span>. <i style="margin-left: 10px;" class="fa fa-sign-out fa-1x onSignout" aria-hidden="true"></i></h1>
+	<section class="hero" style="display: none">
         <img style="border-radius: 15px; height: 150px; margin-bottom: 40px;" src="logo.png"/>
 		<div class="background-image" style="background-image: url(img/echo-bg.png);"></div>
 		<h1>Hello, What's your name?</h1>
-		<input type="text"></input>
+		<input type="text" id="nameInput"></input>
 	</section>
 
 
 	<section class="our-work" style="display: none">
-		<h3 class="title">Echoes</h3>
+		<label class="switch">
+			<input id="checkSwitch" type="checkbox">
+			<span class="slider round"></span>
+		</label>
+		<h3 class="title1">Echoes By Everyone</h3>
+		<h3 class="title2" style="display: none";>Echoes By You</h3>
 		<hr>
 
 		<ul class="grid">
 			<li class="small" style="background-image: url(img/coast.jpg);"></li>
 			<li class="small" style="background-image: url(img/island.jpg);"></li>
-			<li class="small" style="background-image: url(mg/balloon.jpg);"></li>
+			<li class="small" style="background-image: url(img/balloon.jpg);"></li>
 			<li class="small" style="background-image: url(img/mountain.jpg);"></li>
 		</div>
 	</section>

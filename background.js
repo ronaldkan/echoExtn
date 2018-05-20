@@ -18,7 +18,11 @@ chrome.runtime.onMessage.addListener(
             sendResponse({data: items});
         })
         return true;
-    }else {
+    }
+    else if (request.doSendMessage === true) {
+        
+    }
+    else {
         var contentObj = new Object();
         console.log('background range', request);
         contentObj.author = "username";

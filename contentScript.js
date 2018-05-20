@@ -76,7 +76,6 @@ hwReplacements = new Promise(function (resolve, reject) {
 
         });
         chrome.storage.local.get("words", function (items) {
-            console.log(items);
             resolve(items);
         });
     });
@@ -128,7 +127,7 @@ document.addEventListener('mouseup', function (e) {
         
         $("span.popup-tag").css("display","block");
         $("span.popup-tag").css("top",e.clientY + 12 + window.scrollY );
-        $("span.popup-tag").css("left",e.clientX + 20);
+        $("span.popup-tag").css("left",e.clientX - 30);
         
         range = window.getSelection().getRangeAt(0);
         console.log(window.getSelection().toString());
@@ -173,7 +172,18 @@ $(document).on('click', '.highlightBtn', function(e) {
     });
 });
 
-document.body.innerHTML += '<span class="popup-tag"><button class="highlightBtn">highlight</button></span>';
+// $(document).on('click', '.shareBtn', function() {
+//     console.log(socket);
+//     chrome.runtime.sendMessage({loadHighlights: true, url : "https://echoes.japanwest.cloudapp.azure.com/content/fetch", 
+//                 message: window.location.href
+//                 username: }, function(response) {
+//     });
+// });
+
+document.body.innerHTML += '<span class="popup-tag"> ' +
+    '<button class="highlightBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>' +
+    '<button class="shareBtn"><i class="fa fa-share" aria-hidden="true"></i></button>' + 
+    '</span>';
 
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.method == "getSelection")
