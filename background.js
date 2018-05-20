@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(
     else {
         var contentObj = new Object();
         console.log('background range', request);
-        contentObj.author = "username";
+        contentObj.author = localStorage.getItem("echoUserName");
         contentObj.address = sender.tab.url;
         contentObj.detail = request.hightlightedText;
         console.log('hit create highlight');
