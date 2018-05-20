@@ -108,10 +108,7 @@ function replaceSelectionWithHtml(html) {
         range.pasteHTML(html);
     }
 }
-var startNode = undefined;
-var endNode = undefined;
-var startOffset = undefined;
-var endOffset = undefined;
+
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
     var range;
@@ -130,18 +127,18 @@ document.addEventListener('mouseup', function (e) {
         $("span.popup-tag").css("left",e.clientX - 30);
         
         range = window.getSelection().getRangeAt(0);
-        console.log(window.getSelection().toString());
-        range.deleteContents();
-        var div = document.createElement("div");
-        div.innerHTML = '<span>' + replaceText + '</span>';
-        var frag = document.createDocumentFragment(), child;
-        while ( (child = div.firstChild) ) {
-            frag.appendChild(child);
-        }
-        range.insertNode(frag);
-    } else if (document.selection && document.selection.createRange) {
-        range = document.selection.createRange();
-        range.pasteHTML('<span style="font-weight:bold;">' + replaceText +'</span>');
+    //     console.log(window.getSelection().toString());
+    //     range.deleteContents();
+    //     var div = document.createElement("div");
+    //     div.innerHTML = '<span>' + replaceText + '</span>';
+    //     var frag = document.createDocumentFragment(), child;
+    //     while ( (child = div.firstChild) ) {
+    //         frag.appendChild(child);
+    //     }
+    //     range.insertNode(frag);
+    // } else if (document.selection && document.selection.createRange) {
+    //     range = document.selection.createRange();
+    //     range.pasteHTML('<span style="font-weight:bold;">' + replaceText +'</span>');
     }
 }, false);
 
@@ -163,7 +160,6 @@ $(document).on('click', '.highlightBtn', function(e) {
     // chrome.storage.local.set({"words" : }, function(result) {
     
     // }
-
     chrome.runtime.sendMessage({
         "loadHighlights": false,
         "hightlightedText": replaceText
@@ -189,3 +185,11 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
     if (request.method == "getSelection")
         console.log(window.getSelection().toString());
 });
+
+console.log(
+    
+chrome.storage.local.get("echoUserName", function (items) {
+    console.log(items.echoUserName);
+})
+
+)

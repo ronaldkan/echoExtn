@@ -7,10 +7,11 @@ $('input[type=text]').on('keydown', function(e) {
         var name = $('#nameInput').val();
         $('.userName').text(name);
         localStorage.setItem("echoUserName", name);
+        chrome.storage.local.set({"echoUserName" : name}, function(result) {
+        });
         $('#nameInput').val("");
     }
 });
-
 if (localStorage.getItem("echoUserName")) {
     $('.headerDisplay').show();
     $('.userName').text(localStorage.getItem("echoUserName"));
