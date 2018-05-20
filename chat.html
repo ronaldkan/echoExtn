@@ -5264,7 +5264,7 @@ function scrollToBottom() {
 }
 
 socket.on('connect', function () {
-	currentUserName = generateName();
+	currentUserName = localStorage.getItem("echoUserName");
 	var roomLocation = window.location.href;
 	var params = {
         room: roomLocation, 

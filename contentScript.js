@@ -190,6 +190,7 @@ console.log(
     
 chrome.storage.local.get("echoUserName", function (items) {
     console.log(items.echoUserName);
+    localStorage.setItem("echoUserName", items.echoUserName);
 })
 
 )
