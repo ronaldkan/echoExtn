@@ -20,7 +20,13 @@ chrome.runtime.onMessage.addListener(
         return true;
     }
     else if (request.doSendMessage === true) {
-        
+        var message = request.message;
+        var name = request.name;
+        var contentObj = new Object();
+        contentObj.name = name;
+        contentObj.message = message;
+        $.post(request.url, contentObj, function(data) {
+        });
     }
     else {
         var contentObj = new Object();
